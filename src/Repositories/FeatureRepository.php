@@ -27,11 +27,27 @@ class FeatureRepository implements FeatureRepositoryInterface
      */
     public function findByKey(string $key): ?Feature
     {
-        return Cache::store($this->store)->remember(
-            $this->cachePrefix . $key,
-            $this->ttl,
-            fn () => Feature::with('rules')->where('key', $key)->first()
-        );
+        $cacheKey = $this->cachePrefix . $key;
+        $cached = Cache::store($this->store)->get($cacheKey);
+
+        // If we have a cached object, verify it is actually a Feature instance
+        // This prevents "__PHP_Incomplete_Class" errors if namespaces change
+        if ($cached !== null && !($cached instanceof Feature)) {
+            Cache::store($this->store)->forget($cacheKey);
+            $cached = null;
+        }
+
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $feature = Feature::with('rules')->where('key', $key)->first();
+
+        if ($feature) {
+            Cache::store($this->store)->put($cacheKey, $feature, $this->ttl);
+        }
+
+        return $feature;
     }
 
     /**

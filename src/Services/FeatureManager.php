@@ -11,6 +11,8 @@ class FeatureManager
 {
     use Macroable;
 
+    protected array $fakes = [];
+
     public function __construct(
         protected FeatureRepositoryInterface $repository,
         protected ConditionEvaluator $evaluator,
@@ -27,6 +29,10 @@ class FeatureManager
      */
     public function enabled(string $key, $context = null): bool
     {
+        if (array_key_exists($key, $this->fakes)) {
+            return (bool) $this->fakes[$key];
+        }
+
         $feature = $this->repository->findByKey($key);
 
         if (!$feature) {
@@ -55,6 +61,10 @@ class FeatureManager
      */
     public function value(string $key, $default = null)
     {
+        if (array_key_exists($key, $this->fakes)) {
+            return $this->fakes[$key];
+        }
+
         $feature = $this->repository->findByKey($key);
 
         return $feature ? ($feature->value ?? $default) : $default;
@@ -70,6 +80,17 @@ class FeatureManager
     public function extend(string $type, string $callback): void
     {
         $this->registry->register($type, $callback);
+    }
+
+    /**
+     * Fake the enabled status or value of features for testing.
+     *
+     * @param array $fakes
+     * @return void
+     */
+    public function fake(array $fakes): void
+    {
+        $this->fakes = $fakes;
     }
 
     /**

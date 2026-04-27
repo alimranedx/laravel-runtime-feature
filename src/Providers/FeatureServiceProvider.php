@@ -66,6 +66,12 @@ class FeatureServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
         }
 
+        // Load routes
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+
+        // Load views
+        $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'feature');
+
         // Load helpers
         require_once __DIR__ . '/../Support/helpers.php';
     }

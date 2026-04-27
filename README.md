@@ -1,108 +1,140 @@
 # Laravel Runtime Feature
 
-A production-ready, decoupled runtime feature engine for Laravel. Dynamically enable/disable features, evaluate them based on custom context, and return dynamic values without re-deploying.
+A high-performance, decoupled feature flag engine for Laravel. Dynamically control application behavior without code deployments.
 
-## Features
+## Why this package?
 
-- ✅ **Decoupled**: No dependencies on Auth, User models, or permission packages.
-- ✅ **Dynamic Values**: Supports JSON values for features, not just booleans.
-- ✅ **Extensible**: Custom condition rules via a registry system.
-- ✅ **Context-Aware**: Evaluate features based on any context (User, Request, IP, etc.).
-- ✅ **High Performance**: Cache-first architecture with customizable TTL.
-- ✅ **Developer Friendly**: Facades, helpers, and middleware included.
+- **Zero-Dependency Core**: Decoupled from Auth, User models, or external permissions.
+- **Dynamic Payloads**: Return complex JSON configurations, not just booleans.
+- **Contextual Awareness**: Evaluate flags based on Users, Requests, IPs, or any custom entity.
+- **Atomic Caching**: Cache-first evaluation with automatic invalidation on updates.
+- **Management UI**: Built-in sleek dashboard for real-time feature control.
 
-## Installation
+---
 
-You can install the package via composer:
+## Quick Start
 
+### 1. Installation
 ```bash
 composer require al_imran/laravel-runtime-feature
 ```
 
-Then, publish the config and migrations:
-
+### 2. Setup
 ```bash
 php artisan vendor:publish --tag="feature-config"
 php artisan vendor:publish --tag="feature-migrations"
 php artisan migrate
 ```
 
-## Usage
+---
 
-### Basic Check
+## Developer implementation
+
+### Basic Evaluation
+The package provides a clean `feature()` helper and a `Feature` facade.
+
 ```php
-if (Feature::enabled('new_checkout')) {
-    // Show new checkout
+use Imran\LaravelRuntimeFeature\Facades\Feature;
+
+// Simple boolean check
+if (Feature::enabled('new_ui')) {
+    // Render new UI
 }
 
-// Or using the helper
-if (feature('new_checkout')->enabled()) {
-    // ...
-}
-```
-
-### Dynamic Values
-```php
-$discount = Feature::value('holiday_discount', 10);
-// Or
-$config = feature('ui_theme')->value(['color' => 'blue']);
+// Using helper with default value
+$limit = feature('upload_limit')->value(50); // returns 50 if feature doesn't exist
 ```
 
 ### Contextual Evaluation
-You can pass a context (e.g., a User object or ID) to evaluate rules:
+Pass any object or value to evaluate dynamic rules (e.g., target specific users or plans).
 
 ```php
+// Explicit context
 if (Feature::enabled('beta_access', $user)) {
     // ...
 }
+
+// Dynamic payload based on context
+$discount = feature('holiday_sale')->value(['percent' => 5], $user);
 ```
 
-## Extensibility
+### Middleware Protection
+```php
+Route::middleware('feature:premium_search')->group(function () {
+    Route::get('/search/advanced', [SearchController::class, 'advanced']);
+});
+```
+
+---
+
+## Extending the Engine
 
 ### Custom Conditions
-Create a class implementing `FeatureCondition`:
+Create a class implementing `FeatureCondition` to define your own logic.
 
 ```php
 namespace App\Features\Conditions;
 
 use Imran\LaravelRuntimeFeature\Contracts\FeatureCondition;
 
-class PlanCondition implements FeatureCondition
+class SubscriptionPlanCondition implements FeatureCondition
 {
+    /**
+     * @param mixed $context Usually the User model
+     * @param mixed $value The value defined in the rule (e.g., 'pro')
+     */
     public function passes($context, $value): bool
     {
-        return $context->plan === $value;
+        return $context && $context->plan === $value;
     }
 }
 ```
 
 Register it in your `AppServiceProvider`:
-
 ```php
-use Imran\LaravelRuntimeFeature\Facades\Feature;
-use App\Features\Conditions\PlanCondition;
+Feature::extend('plan', SubscriptionPlanCondition::class);
+```
 
-public function boot()
+---
+
+## Testing & Quality Assurance
+
+### Suggested Test Cases for Developers
+
+When implementing feature flags, ensure your test suite covers these scenarios:
+
+1.  **Default Fallback**: Verify the application behaves correctly when a feature flag is missing from the database.
+2.  **Toggle Consistency**: Assert that functionality disappears immediately when `enabled` is set to `false`.
+3.  **JSON Schema Integrity**: If using JSON values, test that your code handles missing keys or malformed data gracefully.
+4.  **Context Leakage**: Ensure `User A` (with feature) and `User B` (without) see different results in the same request cycle.
+5.  **Cache Invalidation**: Verify that updating a feature via the UI/Database reflects in the application without manual cache clears.
+
+### Mocking in Tests
+```php
+public function test_premium_feature_is_accessible()
 {
-    Feature::extend('plan', PlanCondition::class);
+    Feature::fake(['premium_access' => true]);
+
+    $response = $this->get('/premium-zone');
+    $response->assertStatus(200);
 }
 ```
 
-### Custom Context Resolver
-If you don't want to pass context manually, register a resolver in `config/feature.php`:
+---
 
-```php
-'resolver' => \App\Features\MyContextResolver::class,
-```
+## Management Dashboard
 
-## Middleware
-Protect routes with the included middleware:
+Access the built-in manager at `/features-manager`. 
 
-```php
-Route::middleware('feature:beta_access')->group(function () {
-    Route::get('/beta-dashboard', ...);
-});
-```
+**Features include:**
+- Real-time toggle of flags.
+- JSON payload editor with validation.
+- Cache invalidation tracking.
+
+> [!IMPORTANT]
+> Secure this route in production by defining custom middleware in `config/feature.php`.
+
+---
 
 ## License
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT).
