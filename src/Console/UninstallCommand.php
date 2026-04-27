@@ -51,16 +51,15 @@ class UninstallCommand extends Command
 
     protected function dropTables(): void
     {
-        $this->task('Dropping database tables', function () {
-            Schema::dropIfExists('feature_rules');
-            Schema::dropIfExists('features');
-            
-            // Clean up migration records from the migrations table
-            \DB::table('migrations')
-                ->where('migration', 'like', '%_create_features_table')
-                ->orWhere('migration', 'like', '%_create_feature_rules_table')
-                ->delete();
-        });
+        $this->info('Dropping database tables...');
+        Schema::dropIfExists('feature_rules');
+        Schema::dropIfExists('features');
+        
+        \DB::table('migrations')
+            ->where('migration', 'like', '%_create_features_table')
+            ->orWhere('migration', 'like', '%_create_feature_rules_table')
+            ->delete();
+        $this->info('Tables dropped.');
     }
 
     protected function removeConfig(): void
@@ -68,23 +67,23 @@ class UninstallCommand extends Command
         $configPath = config_path('feature.php');
 
         if (File::exists($configPath)) {
-            $this->task('Removing configuration file', function () use ($configPath) {
-                File::delete($configPath);
-            });
+            $this->info('Removing configuration file...');
+            File::delete($configPath);
+            $this->info('Config file removed.');
         }
     }
 
     protected function removeMigrations(): void
     {
-        $this->task('Removing published migration files', function () {
-            $migrationFiles = File::files(database_path('migrations'));
-            
-            foreach ($migrationFiles as $file) {
-                if (str_contains($file->getFilename(), 'create_features_table') || 
-                    str_contains($file->getFilename(), 'create_feature_rules_table')) {
-                    File::delete($file->getPathname());
-                }
+        $this->info('Removing published migration files...');
+        $migrationFiles = File::files(database_path('migrations'));
+        
+        foreach ($migrationFiles as $file) {
+            if (str_contains($file->getFilename(), 'create_features_table') || 
+                str_contains($file->getFilename(), 'create_feature_rules_table')) {
+                File::delete($file->getPathname());
             }
-        });
+        }
+        $this->info('Migration files removed.');
     }
 }
