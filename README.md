@@ -45,6 +45,30 @@ if (Feature::enabled('new_ui')) {
 $limit = feature('upload_limit')->value(50); // returns 50 if feature doesn't exist
 ```
 
+### Practical Examples
+
+Here is how you would typically interact with a feature named `test_access`:
+
+```php
+// 1. Check if the feature is enabled for the current user
+if (feature('test_access')->enabled()) {
+    // Current user has access to the test feature
+}
+
+// 2. Get the specific value/configuration stored in the feature
+// If the feature stores {"role": "admin", "beta_group": 1}
+$config = feature('test_access')->value();
+
+echo $config['role']; // Output: admin
+
+// Using the Facade instead of the helper
+use Imran\LaravelRuntimeFeature\Facades\Feature;
+
+if (Feature::enabled('test_access')) {
+    $value = Feature::value('test_access');
+}
+```
+
 ### Contextual Evaluation
 Pass any object or value to evaluate dynamic rules (e.g., target specific users or plans).
 
