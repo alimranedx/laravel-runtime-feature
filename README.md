@@ -170,5 +170,21 @@ Access the built-in manager at `/features-manager`.
 
 ---
 
+## Uninstallation
+
+To cleanly remove the package and all its data (tables, config, and migrations), run:
+
+```bash
+php artisan feature:uninstall
+```
+
+After the cleanup command finishes, you can remove the package via composer:
+
+```bash
+composer remove al_imran/laravel-runtime-feature
+```
+
+---
+
 ## License
 The MIT License (MIT).

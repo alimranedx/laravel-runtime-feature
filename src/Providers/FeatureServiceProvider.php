@@ -64,6 +64,10 @@ class FeatureServiceProvider extends ServiceProvider
             ], 'feature-migrations');
 
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+            $this->commands([
+                \Imran\LaravelRuntimeFeature\Console\UninstallCommand::class,
+            ]);
         }
 
         // Load routes
