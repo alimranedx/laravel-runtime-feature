@@ -28,22 +28,32 @@ php artisan migrate
 
 ---
 
-## Developer implementation
-
-### Basic Evaluation
-The package provides a clean `feature()` helper and a `Feature` facade.
+### 1. Simple On/Off Checks (`enabled`)
+Use this when you just need to know if a feature is active.
 
 ```php
 use Imran\LaravelRuntimeFeature\Facades\Feature;
 
-// Simple boolean check
+// Returns true if 'new_ui' is enabled in the dashboard
 if (Feature::enabled('new_ui')) {
-    // Render new UI
+    // Show the new UI
 }
-
-// Using helper with default value
-$limit = feature('upload_limit')->value(50); // returns 50 if feature doesn't exist
 ```
+
+### 2. Configuration Values (`value`)
+Use this to retrieve dynamic data (numbers, strings, or arrays) stored inside a feature.
+
+```php
+// If 'upload_limit' exists, it returns its value. 
+// If it doesn't exist, it returns the default (50).
+$limit = feature('upload_limit')->value(50); 
+```
+
+### Quick Reference
+| Method | Returns | Use Case |
+| :--- | :--- | :--- |
+| **`enabled()`** | `true` / `false` | Is the light switch **ON**? |
+| **`value()`** | `mixed` data | How **BRIGHT** is the light? |
 
 ### Practical Examples
 
