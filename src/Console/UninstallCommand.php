@@ -40,7 +40,10 @@ class UninstallCommand extends Command
         // 2. Remove published config
         $this->removeConfig();
 
-        // 3. Remove published migrations
+        // 3. Remove published views
+        $this->removeViews();
+
+        // 4. Remove published migrations
         $this->removeMigrations();
 
         $this->info('Cleanup completed successfully.');
@@ -70,6 +73,17 @@ class UninstallCommand extends Command
             $this->info('Removing configuration file...');
             File::delete($configPath);
             $this->info('Config file removed.');
+        }
+    }
+
+    protected function removeViews(): void
+    {
+        $viewsPath = resource_path('views/vendor/feature');
+
+        if (File::isDirectory($viewsPath)) {
+            $this->info('Removing published view files...');
+            File::deleteDirectory($viewsPath);
+            $this->info('View files removed.');
         }
     }
 

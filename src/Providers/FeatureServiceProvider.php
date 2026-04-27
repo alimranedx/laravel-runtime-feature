@@ -63,6 +63,10 @@ class FeatureServiceProvider extends ServiceProvider
                 __DIR__ . '/../../database/migrations/' => database_path('migrations'),
             ], 'feature-migrations');
 
+            $this->publishes([
+                __DIR__ . '/../../resources/views' => resource_path('views/vendor/feature'),
+            ], 'feature-views');
+
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
             $this->commands([
