@@ -165,6 +165,14 @@ public function test_premium_feature_is_accessible()
 
 Access the built-in manager at `/features-manager`. 
 
+**Note on Routes:** Routes are loaded automatically from the package. If you need to customize the URLs or middleware, you can publish the route file manually:
+
+```bash
+php artisan vendor:publish --tag=feature-routes
+```
+
+Once published, Laravel will use `routes/runtimeFeature.php` instead of the package's internal file.
+
 **Features include:**
 - Real-time toggle of flags.
 - JSON payload editor with validation.

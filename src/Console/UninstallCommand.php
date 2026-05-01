@@ -46,6 +46,9 @@ class UninstallCommand extends Command
         // 4. Remove published migrations
         $this->removeMigrations();
 
+        // 5. Remove published routes
+        $this->removeRoutes();
+
         $this->info('Cleanup completed successfully.');
         $this->comment('You can now safely run: composer remove al_imran/laravel-runtime-feature');
 
@@ -55,8 +58,8 @@ class UninstallCommand extends Command
     protected function dropTables(): void
     {
         $this->info('Dropping database tables...');
-        Schema::dropIfExists('feature_rules');
-        Schema::dropIfExists('features');
+        Schema::dropIfExists('rtf_feature_rules');
+        Schema::dropIfExists('rtf_features');
         
         \DB::table('migrations')
             ->where('migration', 'like', '%_create_features_table')
@@ -99,5 +102,16 @@ class UninstallCommand extends Command
             }
         }
         $this->info('Migration files removed.');
+    }
+
+    protected function removeRoutes(): void
+    {
+        $routePath = base_path('routes/runtimeFeature.php');
+
+        if (File::exists($routePath)) {
+            $this->info('Removing published route file...');
+            File::delete($routePath);
+            $this->info('Route file removed.');
+        }
     }
 }

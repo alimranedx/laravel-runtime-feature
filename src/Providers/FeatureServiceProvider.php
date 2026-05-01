@@ -67,6 +67,10 @@ class FeatureServiceProvider extends ServiceProvider
                 __DIR__ . '/../../resources/views' => resource_path('views/vendor/feature'),
             ], 'feature-views');
 
+            $this->publishes([
+                __DIR__ . '/../../routes/runtimeFeature.php' => base_path('routes/runtimeFeature.php'),
+            ], 'feature-routes');
+
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
             $this->commands([
@@ -76,7 +80,11 @@ class FeatureServiceProvider extends ServiceProvider
         }
 
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/runtime-feature.php');
+        $routePath = base_path('routes/runtimeFeature.php');
+        if (!file_exists($routePath)) {
+            $routePath = __DIR__ . '/../../routes/runtimeFeature.php';
+        }
+        $this->loadRoutesFrom($routePath);
 
         // Load views
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'feature');
