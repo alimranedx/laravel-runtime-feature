@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('features', function (Blueprint $bt) {
+        Schema::create('rtf_features', function (Blueprint $bt) {
             $bt->id();
             $bt->string('key')->unique();
             $bt->boolean('enabled')->default(false);
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('features');
+        Schema::dropIfExists('rtf_features');
     }
 };

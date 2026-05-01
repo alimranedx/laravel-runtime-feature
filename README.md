@@ -20,11 +20,16 @@ composer require al_imran/laravel-runtime-feature
 ```
 
 ### 2. Setup
+Run the following command to publish assets and handle migrations:
+
 ```bash
-php artisan vendor:publish --tag="feature-config"
-php artisan vendor:publish --tag="feature-migrations"
-php artisan migrate
+php artisan feature:install
 ```
+
+This command will:
+- Publish the configuration file.
+- Publish the database migrations.
+- Ask to run migrations automatically.
 
 ---
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FeatureRule extends Model
 {
+    protected $table = 'rtf_feature_rules';
+
     protected $fillable = [
         'feature_id',
         'type',

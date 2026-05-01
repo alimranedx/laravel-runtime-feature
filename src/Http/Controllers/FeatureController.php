@@ -23,7 +23,7 @@ class FeatureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'key' => 'required|unique:features,key',
+            'key' => 'required|unique:rtf_features,key',
             'enabled' => 'boolean',
             'value' => [
                 'nullable',
@@ -54,7 +54,7 @@ class FeatureController extends Controller
     public function update(Request $request, Feature $feature)
     {
         $request->validate([
-            'key' => 'required|unique:features,key,' . $feature->id,
+            'key' => 'required|unique:rtf_features,key,' . $feature->id,
             'enabled' => 'boolean',
             'value' => [
                 'nullable',

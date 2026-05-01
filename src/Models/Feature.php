@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Feature extends Model
 {
+    protected $table = 'rtf_features';
+
     protected $fillable = [
         'key',
         'enabled',

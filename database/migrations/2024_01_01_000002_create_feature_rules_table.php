@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('feature_rules', function (Blueprint $bt) {
+        Schema::create('rtf_feature_rules', function (Blueprint $bt) {
             $bt->id();
-            $bt->foreignId('feature_id')->constrained()->cascadeOnDelete();
+            $bt->foreignId('feature_id')->constrained('rtf_features')->cascadeOnDelete();
             $bt->string('type');
             $bt->json('value');
             $bt->timestamps();
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('feature_rules');
+        Schema::dropIfExists('rtf_feature_rules');
     }
 };

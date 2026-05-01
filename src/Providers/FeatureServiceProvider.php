@@ -70,12 +70,13 @@ class FeatureServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
             $this->commands([
+                \Imran\LaravelRuntimeFeature\Console\InstallCommand::class,
                 \Imran\LaravelRuntimeFeature\Console\UninstallCommand::class,
             ]);
         }
 
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/runtime-feature.php');
 
         // Load views
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'feature');
