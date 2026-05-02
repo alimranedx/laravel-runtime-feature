@@ -59,15 +59,21 @@ class FeatureManager
      * @param mixed|null $default
      * @return mixed
      */
-    public function value(string $key, $default = null)
+    public function value(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->fakes)) {
             return $this->fakes[$key];
         }
 
         $feature = $this->repository->findByKey($key);
-
-        return $feature ? ($feature->value ?? $default) : $default;
+        
+        if(!$feature){
+            return null;
+        }
+        if(empty($feature->value)){
+            return $default;
+        }
+        return $feature->value;
     }
 
     /**
