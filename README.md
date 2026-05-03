@@ -1,203 +1,177 @@
 # Laravel Runtime Feature
 
-A high-performance, decoupled feature flag engine for Laravel. Dynamically control application behavior without code deployments.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
+[![Total Downloads](https://img.shields.io/packagist/dt/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
+[![License](https://img.shields.io/packagist/l/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
 
-## Why this package?
-
-- **Zero-Dependency Core**: Decoupled from Auth, User models, or external permissions.
-- **Dynamic Payloads**: Return complex JSON configurations, not just booleans.
-- **Contextual Awareness**: Evaluate flags based on Users, Requests, IPs, or any custom entity.
-- **Atomic Caching**: Cache-first evaluation with automatic invalidation on updates.
-- **Management UI**: Built-in sleek dashboard for real-time feature control.
+**Laravel Runtime Feature** is a high-performance, decoupled feature flag engine for Laravel. It allows you to dynamically control application behavior and configuration at runtime without code deployments or configuration changes.
 
 ---
 
-## Quick Start
+## Why Use This Package?
 
-### 1. Installation
+In modern software development, decoupling feature releases from code deployments is critical. This package solves several common problems:
+*   **Safe Releases**: Gradually roll out features to specific users or segments.
+*   **Kill Switches**: Instantly disable problematic features in production without a rollback.
+*   **Dynamic Configuration**: Update logic parameters (like discount rates or API limits) via a dashboard instead of `.env` files.
+*   **Zero-Dependency Core**: Unlike many other packages, it doesn't force a specific User model or Auth structure on you.
+
+## Key Features
+
+*   🚀 **High Performance**: Atomic caching ensures evaluation is lightning fast.
+*   💎 **Sleek Management UI**: Built-in dashboard to manage flags and JSON payloads.
+*   🎭 **Contextual Awareness**: Evaluate flags based on Users, IPs, Request data, or any custom entity.
+*   📦 **Dynamic Payloads**: Return complex JSON configurations, not just simple booleans.
+*   🛠 **Extensible**: Easily add custom condition logic (e.g., "User belongs to Beta Team").
+*   🧪 **Test-Ready**: Robust mocking support for your PHPUnit suites.
+
+---
+
+## Installation
+
+You can install the package via composer:
+
 ```bash
 composer require al_imran/laravel-runtime-feature
 ```
 
-### 2. Setup
-Run the following command to publish assets and handle migrations:
+## Setup
+
+Run the installation command to publish the configuration, migrations, and assets:
 
 ```bash
 php artisan feature:install
 ```
 
 This command will:
-- Publish the configuration file.
-- Publish the database migrations.
-- Ask to run migrations automatically.
+1. Publish the `config/feature.php` file.
+2. Publish and run the database migrations.
+3. Prepare the package for use.
 
 ---
 
+## Basic Usage
+
 ### 1. Simple On/Off Checks (`enabled`)
-Use this when you just need to know if a feature is active.
+Use this to check if a feature is active.
 
 ```php
 use Imran\LaravelRuntimeFeature\Facades\Feature;
 
-// Returns true if 'new_ui' is enabled in the dashboard
-if (Feature::enabled('new_ui')) {
-    // Show the new UI
+// Via Facade
+if (Feature::enabled('new_checkout_flow')) {
+    // Show the new checkout
+}
+
+// Via Helper
+if (feature('new_checkout_flow')->enabled()) {
+    // Show the new checkout
 }
 ```
 
-### 2. Configuration Values (`value`)
-Use this to retrieve dynamic data (numbers, strings, or arrays) stored inside a feature.
+### 2. Retrieving Dynamic Values (`value`)
+Fetch dynamic configurations stored with your feature flag.
 
 ```php
-// If 'upload_limit' exists, it returns its value. 
-// If it doesn't exist, it returns the default (50).
-$limit = feature('upload_limit')->value(50); 
+// Returns the JSON payload from the DB. 
+// If the feature is missing, it returns null.
+// If the feature exists but its value is empty, it returns the default (50).
+$limit = Feature::value('upload_limit', 50);
+
+// Helper syntax
+$config = feature('theme_colors')->value(['primary' => '#000']);
 ```
 
-### Quick Reference
-| Method | Returns | Use Case |
+| Method | Returns | Description |
 | :--- | :--- | :--- |
-| **`enabled()`** | `true` / `false` | Is the light switch **ON**? |
-| **`value()`** | `mixed` data | How **BRIGHT** is the light? |
+| `enabled()` | `bool` | Is the feature active? |
+| `value()` | `mixed` | Returns the dynamic JSON payload or a default. |
 
-### Practical Examples
+---
 
-Here is how you would typically interact with a feature named `test_access`:
-
-```php
-// 1. Check if the feature is enabled for the current user
-if (feature('test_access')->enabled()) {
-    // Current user has access to the test feature
-}
-
-// 2. Get the specific value/configuration stored in the feature
-// If the feature stores {"role": "admin", "beta_group": 1}
-$config = feature('test_access')->value();
-
-echo $config['role']; // Output: admin
-
-// Using the Facade instead of the helper
-use Imran\LaravelRuntimeFeature\Facades\Feature;
-
-if (Feature::enabled('test_access')) {
-    $value = Feature::value('test_access');
-}
-```
+## Advanced Usage
 
 ### Contextual Evaluation
-Pass any object or value to evaluate dynamic rules (e.g., target specific users or plans).
+Pass a context (e.g., a User model) to evaluate rules specifically for that entity.
 
 ```php
-// Explicit context
-if (Feature::enabled('beta_access', $user)) {
-    // ...
-}
+$user = auth()->user();
 
-// Dynamic payload based on context
-$discount = feature('holiday_sale')->value(['percent' => 5], $user);
+if (Feature::enabled('beta_access', $user)) {
+    // This user specifically has access based on rules defined in the dashboard
+}
 ```
 
-### Middleware Protection
+### Custom Conditions
+Register your own logic for rule evaluation.
+
 ```php
-Route::middleware('feature:premium_search')->group(function () {
-    Route::get('/search/advanced', [SearchController::class, 'advanced']);
+// In a ServiceProvider
+Feature::extend('user_level', function ($context, $value) {
+    return $context->level >= $value;
 });
 ```
 
----
-
-## Extending the Engine
-
-### Custom Conditions
-Create a class implementing `FeatureCondition` to define your own logic.
+### Mocking for Tests
+Avoid database hits in your tests by faking feature states.
 
 ```php
-namespace App\Features\Conditions;
-
-use Imran\LaravelRuntimeFeature\Contracts\FeatureCondition;
-
-class SubscriptionPlanCondition implements FeatureCondition
+public function test_new_feature_is_displayed()
 {
-    /**
-     * @param mixed $context Usually the User model
-     * @param mixed $value The value defined in the rule (e.g., 'pro')
-     */
-    public function passes($context, $value): bool
-    {
-        return $context && $context->plan === $value;
-    }
-}
-```
+    Feature::fake([
+        'new_feature' => true,
+        'api_limit' => 1000
+    ]);
 
-Register it in your `AppServiceProvider`:
-```php
-Feature::extend('plan', SubscriptionPlanCondition::class);
-```
-
----
-
-## Testing & Quality Assurance
-
-### Suggested Test Cases for Developers
-
-When implementing feature flags, ensure your test suite covers these scenarios:
-
-1.  **Default Fallback**: Verify the application behaves correctly when a feature flag is missing from the database.
-2.  **Toggle Consistency**: Assert that functionality disappears immediately when `enabled` is set to `false`.
-3.  **JSON Schema Integrity**: If using JSON values, test that your code handles missing keys or malformed data gracefully.
-4.  **Context Leakage**: Ensure `User A` (with feature) and `User B` (without) see different results in the same request cycle.
-5.  **Cache Invalidation**: Verify that updating a feature via the UI/Database reflects in the application without manual cache clears.
-
-### Mocking in Tests
-```php
-public function test_premium_feature_is_accessible()
-{
-    Feature::fake(['premium_access' => true]);
-
-    $response = $this->get('/premium-zone');
-    $response->assertStatus(200);
+    $this->get('/dashboard')->assertSee('New Feature');
 }
 ```
 
 ---
 
-## Management Dashboard
+## Real-World Use Cases
 
-Access the built-in manager at `/features-manager`. 
-
-**Note on Routes:** Routes are loaded automatically from the package. If you need to customize the URLs or middleware, you can publish the route file manually:
-
-```bash
-php artisan vendor:publish --tag=feature-routes
-```
-
-Once published, Laravel will use `routes/runtimeFeature.php` instead of the package's internal file.
-
-**Features include:**
-- Real-time toggle of flags.
-- JSON payload editor with validation.
-- Cache invalidation tracking.
-
-> [!IMPORTANT]
-> Secure this route in production by defining custom middleware in `config/feature.php`.
+1.  **Feature Rollout**: Enable `new_sidebar` for 10% of users to monitor performance before a full launch.
+2.  **A/B Testing**: Store different configuration values (e.g., button colors) in the `value` field to test user engagement.
+3.  **Emergency Toggles**: If a 3rd-party service goes down, instantly disable the integration via the dashboard to keep the rest of the app running.
 
 ---
 
-## Uninstallation
+## Comparison: Laravel Pennant
 
-To cleanly remove the package and all its data (tables, config, and migrations), run:
+While [Laravel Pennant](https://laravel.com/docs/pennant) is an excellent tool for user-centric feature flags, **Laravel Runtime Feature** differs in its focus:
 
-```bash
-php artisan feature:uninstall
-```
-
-After the cleanup command finishes, you can remove the package via composer:
-
-```bash
-composer remove al_imran/laravel-runtime-feature
-```
+*   **Management UI**: We provide a ready-to-use dashboard for non-technical stakeholders to manage flags.
+*   **Dynamic Payloads**: We treat JSON configurations as first-class citizens, making it easier to use flags for remote config.
+*   **Decoupled Context**: Our engine doesn't assume an Eloquent User model, making it easier to use in non-standard or multi-tenant applications.
 
 ---
+
+## Testing
+
+```bash
+composer test
+```
+
+## Security
+
+If you discover any security-related issues, please email alimran.edx@gmail.com instead of using the issue tracker.
+
+**Dashboard Protection**: By default, the dashboard is accessible in local environments. For production, protect the `/features-manager` route by defining custom middleware in `config/feature.php`.
+
+---
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## License
-The MIT License (MIT).
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+---
+**Packagist Description:**
+A high-performance, decoupled feature flag engine with a management UI and dynamic JSON configuration support for Laravel.
+
+**Keywords:**
+laravel, feature-flags, remote-config, feature-toggle, runtime-configuration
