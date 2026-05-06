@@ -48,6 +48,59 @@ This command will:
 2. Publish and run the database migrations.
 3. Prepare the package for use.
 
+## Feature Management
+
+This package comes with a built-in dashboard to add, edit, and maintain your feature flags without touching the database manually.
+
+### Accessing the Dashboard
+By default, the dashboard is available at:
+`YOUR_APP_URL/features-manager`
+
+From here, you can:
+*   **Add New Features**: Define keys and initial JSON payloads.
+*   **Toggle States**: Instantly enable or disable features globally.
+*   **Manage Rules**: Add complex conditions (like User ID or Time Ranges) to control feature availability.
+*   **Edit Payloads**: Update dynamic configuration values on the fly.
+
+## Customizing & Securing the Dashboard
+
+By default, the management dashboard is accessible at `/features-manager`. While this is convenient for development, you should secure it in production environments.
+
+### Option 1: Using Configuration (Easiest)
+
+The simplest way to protect the dashboard is by updating the `config/feature.php` file. You can add any middleware (like `auth` or custom admin middleware) to the `routes` array:
+
+```php
+// config/feature.php
+'routes' => [
+    'prefix' => 'admin/features', // Change the URL prefix if desired
+    'middleware' => ['web', 'auth', 'can:manage-features'], // Add your protection here
+],
+```
+
+### Option 2: Taking Full Ownership of Routes
+
+If you need even more control (e.g., adding extra routes or changing the route structure), you can publish the routes file to your application:
+
+```bash
+php artisan vendor:publish --tag=feature-routes
+```
+
+This will create `routes/runtimeFeature.php` in your project. The package will automatically detect and use this file instead of its internal routes. You can then modify the group directly:
+
+```php
+// routes/runtimeFeature.php
+Route::middleware(['web', 'auth', 'your-custom-admin-middleware'])
+    ->prefix('features-manager')
+    ->name('features.')
+    ->group(function () {
+        // Your customized routes...
+    });
+```
+
+> [!IMPORTANT]
+> **Security Reminder**: The developer is responsible for ensuring that the dashboard routes are properly protected. By default, only the `web` middleware is applied, which provides no authentication or authorization.
+
 ---
 
 ## Basic Usage
@@ -156,8 +209,6 @@ composer test
 ## Security
 
 If you discover any security-related issues, please email alimran.edx@gmail.com instead of using the issue tracker.
-
-**Dashboard Protection**: By default, the dashboard is accessible in local environments. For production, protect the `/features-manager` route by defining custom middleware in `config/feature.php`.
 
 ---
 

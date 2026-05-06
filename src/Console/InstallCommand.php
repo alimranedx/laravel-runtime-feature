@@ -48,6 +48,11 @@ class InstallCommand extends Command
             '--provider' => 'Imran\LaravelRuntimeFeature\Providers\FeatureServiceProvider',
             '--tag' => 'feature-migrations',
         ]);
+        $this->info('Publishing routes...');
+        $this->call('vendor:publish', [
+            '--provider' => 'Imran\LaravelRuntimeFeature\Providers\FeatureServiceProvider',
+            '--tag' => 'feature-routes',
+        ]);
 
         if ($this->confirm('Would you like to run the migrations now?', true)) {
             $this->info('Running migrations...');

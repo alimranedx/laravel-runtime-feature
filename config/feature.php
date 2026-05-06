@@ -45,4 +45,19 @@ return [
         'user_id' => UserIdCondition::class,
         'time_range' => TimeRangeCondition::class,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Route Configuration
+    |--------------------------------------------------------------------------
+    |
+    | These options control the registration of the feature management routes.
+    | You can specify the prefix and middleware that should be applied to
+    | the dashboard routes.
+    |
+    */
+    'routes' => [
+        'prefix' => env('FEATURE_ROUTE_PREFIX', 'features-manager'),
+        'middleware' => ['web'],
+    ],
 ];

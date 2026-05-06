@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Imran\LaravelRuntimeFeature\Http\Controllers\FeatureController;
 
-Route::middleware(['web'])->prefix('features-manager')->name('features.')->group(function () {
+Route::middleware(config('feature.routes.middleware', ['web']))
+    ->prefix(config('feature.routes.prefix', 'features-manager'))
+    ->name('features.')
+    ->group(function () {
     Route::get('/', [FeatureController::class, 'index'])->name('index');
     Route::get('/create', [FeatureController::class, 'create'])->name('create');
     Route::post('/', [FeatureController::class, 'store'])->name('store');
