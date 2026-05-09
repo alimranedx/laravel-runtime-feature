@@ -48,15 +48,17 @@ class InstallCommand extends Command
             '--provider' => 'Imran\LaravelRuntimeFeature\Providers\FeatureServiceProvider',
             '--tag' => 'feature-migrations',
         ]);
-        $this->info('Publishing routes...');
-        $this->call('vendor:publish', [
-            '--provider' => 'Imran\LaravelRuntimeFeature\Providers\FeatureServiceProvider',
-            '--tag' => 'feature-routes',
-        ]);
 
         if ($this->confirm('Would you like to run the migrations now?', true)) {
             $this->info('Running migrations...');
             $this->call('migrate');
+        }
+        if ($this->confirm('Would you like to register runtime feature routes now?', true)) {
+            $this->info('Registering runtime feature routes...');
+            $this->call('vendor:publish', [
+                '--provider' => 'Imran\LaravelRuntimeFeature\Providers\FeatureServiceProvider',
+                '--tag' => 'feature-routes',
+            ]);
         }
 
         $this->info('Laravel Runtime Feature installed successfully.');
