@@ -8,6 +8,9 @@ use Imran\LaravelRuntimeFeature\Extensions\ConditionRegistry;
 use Imran\LaravelRuntimeFeature\Repositories\FeatureRepository;
 use Imran\LaravelRuntimeFeature\Services\ConditionEvaluator;
 use Imran\LaravelRuntimeFeature\Services\FeatureManager;
+use Imran\LaravelRuntimeFeature\Services\FeatureCacheService;
+use Imran\LaravelRuntimeFeature\Models\Feature;
+use Imran\LaravelRuntimeFeature\Observers\FeatureObserver;
 use Illuminate\Support\ServiceProvider;
 
 class FeatureServiceProvider extends ServiceProvider
@@ -34,6 +37,10 @@ class FeatureServiceProvider extends ServiceProvider
 
         $this->app->singleton(FeatureRepositoryInterface::class, FeatureRepository::class);
 
+        $this->app->singleton(FeatureCacheService::class, function ($app) {
+            return new FeatureCacheService();
+        });
+
         $this->app->singleton(FeatureContextResolver::class, function ($app) {
             $class = config('feature.resolver');
             return new $class();
@@ -54,6 +61,8 @@ class FeatureServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Feature::observe(FeatureObserver::class);
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../../config/feature.php' => config_path('feature.php'),
