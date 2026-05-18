@@ -1,15 +1,15 @@
-# Laravel Runtime Feature
+# Runtime Feature Toggle
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
 [![Total Downloads](https://img.shields.io/packagist/dt/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
 [![License](https://img.shields.io/packagist/l/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
 
-**Laravel Runtime Feature** is a high-performance, decoupled feature flag engine for Laravel. It allows you to dynamically control application behavior and configuration at runtime without code deployments or configuration changes.
+**Runtime Feature Toggle** is a high-performance, decoupled feature flag engine for Laravel. It allows you to dynamically control application behavior and configuration at runtime without code deployments or configuration changes.
 
 ### Instant Control, Zero Deployment
 Imagine you need to pause all outgoing emails or SMS notifications during a maintenance window. Normally, you'd have to update an `.env` key or change your code and redeploy to production. 
 
-With **Laravel Runtime Feature**, you can toggle these features instantly via the database. The best part? Our **intelligent caching system** ensures that these checks are lightning-fast, giving you the power of dynamic control with the performance of local configuration.
+With **Runtime Feature Toggle**, you can toggle these features instantly via the database. The best part? Our **intelligent caching system** ensures that these checks are lightning-fast, giving you the power of dynamic control with the performance of local configuration.
 
 ---
 
