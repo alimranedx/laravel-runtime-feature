@@ -1,10 +1,10 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Repositories;
+namespace Imran\RuntimeFeatureToggle\Repositories;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureRepositoryInterface;
-use Imran\LaravelRuntimeFeature\Models\Feature;
-use Imran\LaravelRuntimeFeature\Services\FeatureCacheService;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureRepositoryInterface;
+use Imran\RuntimeFeatureToggle\Models\Feature;
+use Imran\RuntimeFeatureToggle\Services\FeatureCacheService;
 
 class FeatureRepository implements FeatureRepositoryInterface
 {

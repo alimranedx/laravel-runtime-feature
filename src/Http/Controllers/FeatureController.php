@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Http\Controllers;
+namespace Imran\RuntimeFeatureToggle\Http\Controllers;
 
-use Imran\LaravelRuntimeFeature\Models\Feature;
-use Imran\LaravelRuntimeFeature\Facades\Feature as FeatureFacade;
+use Imran\RuntimeFeatureToggle\Models\Feature;
+use Imran\RuntimeFeatureToggle\Facades\Feature as FeatureFacade;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

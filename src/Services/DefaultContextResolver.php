@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Services;
+namespace Imran\RuntimeFeatureToggle\Services;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureContextResolver;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureContextResolver;
 
 class DefaultContextResolver implements FeatureContextResolver
 {

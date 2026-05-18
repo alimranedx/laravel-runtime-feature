@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Http\Middleware;
+namespace Imran\RuntimeFeatureToggle\Http\Middleware;
 
-use Imran\LaravelRuntimeFeature\Facades\Feature;
+use Imran\RuntimeFeatureToggle\Facades\Feature;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

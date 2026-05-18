@@ -1,10 +1,10 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Services;
+namespace Imran\RuntimeFeatureToggle\Services;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureContextResolver;
-use Imran\LaravelRuntimeFeature\Contracts\FeatureRepositoryInterface;
-use Imran\LaravelRuntimeFeature\Extensions\ConditionRegistry;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureContextResolver;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureRepositoryInterface;
+use Imran\RuntimeFeatureToggle\Extensions\ConditionRegistry;
 use Illuminate\Support\Traits\Macroable;
 
 class FeatureManager

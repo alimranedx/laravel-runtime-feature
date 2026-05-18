@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Extensions\Conditions;
+namespace Imran\RuntimeFeatureToggle\Extensions\Conditions;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureCondition;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureCondition;
 
 class UserIdCondition implements FeatureCondition
 {

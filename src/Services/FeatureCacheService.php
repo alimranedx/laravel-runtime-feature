@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Services;
+namespace Imran\RuntimeFeatureToggle\Services;
 
-use Imran\LaravelRuntimeFeature\Models\Feature;
+use Imran\RuntimeFeatureToggle\Models\Feature;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
 
@@ -13,7 +13,7 @@ class FeatureCacheService
 
     public function __construct()
     {
-        $this->cacheKey = config('feature.cache.prefix', 'laravel-runtime-feature:') . 'all';
+        $this->cacheKey = config('feature.cache.prefix', 'runtime-feature-toggle:') . 'all';
         $this->store = config('feature.cache.store');
     }
 

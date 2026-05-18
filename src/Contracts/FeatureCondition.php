@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Contracts;
+namespace Imran\RuntimeFeatureToggle\Contracts;
 
 interface FeatureCondition
 {

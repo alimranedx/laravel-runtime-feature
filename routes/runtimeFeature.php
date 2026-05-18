@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 use Illuminate\Support\Facades\Route;
-use Imran\LaravelRuntimeFeature\Http\Controllers\FeatureController;
+use Imran\RuntimeFeatureToggle\Http\Controllers\FeatureController;
 
 Route::middleware(config('feature.routes.middleware', ['web']))
     ->prefix(config('feature.routes.prefix', 'features-manager'))

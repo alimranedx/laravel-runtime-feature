@@ -1,16 +1,16 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Providers;
+namespace Imran\RuntimeFeatureToggle\Providers;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureContextResolver;
-use Imran\LaravelRuntimeFeature\Contracts\FeatureRepositoryInterface;
-use Imran\LaravelRuntimeFeature\Extensions\ConditionRegistry;
-use Imran\LaravelRuntimeFeature\Repositories\FeatureRepository;
-use Imran\LaravelRuntimeFeature\Services\ConditionEvaluator;
-use Imran\LaravelRuntimeFeature\Services\FeatureManager;
-use Imran\LaravelRuntimeFeature\Services\FeatureCacheService;
-use Imran\LaravelRuntimeFeature\Models\Feature;
-use Imran\LaravelRuntimeFeature\Observers\FeatureObserver;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureContextResolver;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureRepositoryInterface;
+use Imran\RuntimeFeatureToggle\Extensions\ConditionRegistry;
+use Imran\RuntimeFeatureToggle\Repositories\FeatureRepository;
+use Imran\RuntimeFeatureToggle\Services\ConditionEvaluator;
+use Imran\RuntimeFeatureToggle\Services\FeatureManager;
+use Imran\RuntimeFeatureToggle\Services\FeatureCacheService;
+use Imran\RuntimeFeatureToggle\Models\Feature;
+use Imran\RuntimeFeatureToggle\Observers\FeatureObserver;
 use Illuminate\Support\ServiceProvider;
 
 class FeatureServiceProvider extends ServiceProvider
@@ -83,8 +83,8 @@ class FeatureServiceProvider extends ServiceProvider
             $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
             $this->commands([
-                \Imran\LaravelRuntimeFeature\Console\InstallCommand::class,
-                \Imran\LaravelRuntimeFeature\Console\UninstallCommand::class,
+                \Imran\RuntimeFeatureToggle\Console\InstallCommand::class,
+                \Imran\RuntimeFeatureToggle\Console\UninstallCommand::class,
             ]);
         }
 

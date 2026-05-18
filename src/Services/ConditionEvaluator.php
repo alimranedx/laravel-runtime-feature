@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Services;
+namespace Imran\RuntimeFeatureToggle\Services;
 
-use Imran\LaravelRuntimeFeature\Extensions\ConditionRegistry;
+use Imran\RuntimeFeatureToggle\Extensions\ConditionRegistry;
 use Illuminate\Support\Collection;
 
 class ConditionEvaluator

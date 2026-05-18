@@ -1,5 +1,5 @@
-{
-    "name": "al_imran/laravel-runtime-feature",
+﻿{
+    "name": "al_imran/runtime-feature-toggle",
     "description": "A runtime feature engine for Laravel applications.",
     "type": "library",
     "license": "MIT",
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Imran\\LaravelRuntimeFeature\\": "src/"
+            "Imran\\RuntimeFeatureToggle\\": "src/"
         },
         "files": [
             "src/Support/helpers.php"
@@ -26,10 +26,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Imran\\LaravelRuntimeFeature\\Providers\\FeatureServiceProvider"
+                "Imran\\RuntimeFeatureToggle\\Providers\\FeatureServiceProvider"
             ],
             "aliases": {
-                "Feature": "Imran\\LaravelRuntimeFeature\\Facades\\Feature"
+                "Feature": "Imran\\RuntimeFeatureToggle\\Facades\\Feature"
             }
         }
     }

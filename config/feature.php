@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-use Imran\LaravelRuntimeFeature\Extensions\Conditions\TimeRangeCondition;
-use Imran\LaravelRuntimeFeature\Extensions\Conditions\UserIdCondition;
-use Imran\LaravelRuntimeFeature\Services\DefaultContextResolver;
+use Imran\RuntimeFeatureToggle\Extensions\Conditions\TimeRangeCondition;
+use Imran\RuntimeFeatureToggle\Extensions\Conditions\UserIdCondition;
+use Imran\RuntimeFeatureToggle\Services\DefaultContextResolver;
 
 return [
     /*
@@ -17,7 +17,7 @@ return [
     */
     'cache' => [
         'store' => env('FEATURE_CACHE_STORE', 'file'),
-        'prefix' => 'laravel-runtime-feature:',
+        'prefix' => 'runtime-feature-toggle:',
         'ttl' => 3600, // 1 hour
     ],
 
@@ -28,7 +28,7 @@ return [
     |
     | This class is responsible for resolving the current context (e.g. User,
     | Request) when no explicit context is provided to the Feature::enabled() method.
-    | Must implement \Imran\LaravelRuntimeFeature\Contracts\FeatureContextResolver.
+    | Must implement \Imran\RuntimeFeatureToggle\Contracts\FeatureContextResolver.
     |
     */
     'resolver' => DefaultContextResolver::class,

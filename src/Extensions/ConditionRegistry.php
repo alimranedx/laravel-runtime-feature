@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Extensions;
+namespace Imran\RuntimeFeatureToggle\Extensions;
 
-use Imran\LaravelRuntimeFeature\Contracts\FeatureCondition;
+use Imran\RuntimeFeatureToggle\Contracts\FeatureCondition;
 use Illuminate\Contracts\Container\Container;
 
 class ConditionRegistry

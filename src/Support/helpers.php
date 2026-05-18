@@ -1,13 +1,13 @@
-<?php
+﻿<?php
 
-use Imran\LaravelRuntimeFeature\Facades\Feature;
+use Imran\RuntimeFeatureToggle\Facades\Feature;
 
 if (!function_exists('feature')) {
     /**
      * Get the feature manager instance or a feature helper.
      *
      * @param string|null $key
-     * @return \Imran\LaravelRuntimeFeature\Services\FeatureManager|object
+     * @return \Imran\RuntimeFeatureToggle\Services\FeatureManager|object
      */
     function feature(?string $key = null)
     {

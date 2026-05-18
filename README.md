@@ -1,8 +1,8 @@
-# Runtime Feature Toggle
+﻿# Runtime Feature Toggle
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
-[![Total Downloads](https://img.shields.io/packagist/dt/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
-[![License](https://img.shields.io/packagist/l/al_imran/laravel-runtime-feature.svg?style=flat-square)](https://packagist.org/packages/al_imran/laravel-runtime-feature)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/al_imran/runtime-feature-toggle.svg?style=flat-square)](https://packagist.org/packages/al_imran/runtime-feature-toggle)
+[![Total Downloads](https://img.shields.io/packagist/dt/al_imran/runtime-feature-toggle.svg?style=flat-square)](https://packagist.org/packages/al_imran/runtime-feature-toggle)
+[![License](https://img.shields.io/packagist/l/al_imran/runtime-feature-toggle.svg?style=flat-square)](https://packagist.org/packages/al_imran/runtime-feature-toggle)
 
 **Runtime Feature Toggle** is a high-performance, decoupled feature flag engine for Laravel. It allows you to dynamically control application behavior and configuration at runtime without code deployments or configuration changes.
 
@@ -37,7 +37,7 @@ In modern software development, decoupling feature releases from code deployment
 You can install the package via composer:
 
 ```bash
-composer require al_imran/laravel-runtime-feature
+composer require al_imran/runtime-feature-toggle
 ```
 
 ## Setup
@@ -114,7 +114,7 @@ Route::middleware(['web', 'auth', 'your-custom-admin-middleware'])
 Use this to check if a feature is active.
 
 ```php
-use Imran\LaravelRuntimeFeature\Facades\Feature;
+use Imran\RuntimeFeatureToggle\Facades\Feature;
 
 // Via Facade
 if (Feature::enabled('new_checkout_flow')) {
@@ -197,7 +197,7 @@ public function test_new_feature_is_displayed()
 
 ## Comparison: Laravel Pennant
 
-While [Laravel Pennant](https://laravel.com/docs/pennant) is an excellent tool for user-centric feature flags, **Laravel Runtime Feature** differs in its focus:
+While [Laravel Pennant](https://laravel.com/docs/pennant) is an excellent tool for user-centric feature flags, **Runtime Feature Toggle** differs in its focus:
 
 *   **Management UI**: We provide a ready-to-use dashboard for non-technical stakeholders to manage flags.
 *   **Dynamic Payloads**: We treat JSON configurations as first-class citizens, making it easier to use flags for remote config.

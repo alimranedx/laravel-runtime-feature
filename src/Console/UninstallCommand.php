@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Console;
+namespace Imran\RuntimeFeatureToggle\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -20,14 +20,14 @@ class UninstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Cleanup and uninstall the Laravel Runtime Feature package';
+    protected $description = 'Cleanup and uninstall the Runtime Feature Toggle package';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $this->info('Starting uninstall process for Laravel Runtime Feature...');
+        $this->info('Starting uninstall process for Runtime Feature Toggle...');
 
         if (!$this->confirm('This will delete all feature flags, rules, and configuration. Are you sure?', false)) {
             $this->warn('Uninstall cancelled.');
@@ -50,7 +50,7 @@ class UninstallCommand extends Command
         $this->removeRoutes();
 
         $this->info('Cleanup completed successfully.');
-        $this->comment('You can now safely run: composer remove al_imran/laravel-runtime-feature');
+        $this->comment('You can now safely run: composer remove al_imran/runtime-feature-toggle');
 
         return 0;
     }

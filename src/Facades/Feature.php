@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Facades;
+namespace Imran\RuntimeFeatureToggle\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void clearCache(?string $key = null)
  * @method static void fake(array $fakes)
  *
- * @see \Imran\LaravelRuntimeFeature\Services\FeatureManager
+ * @see \Imran\RuntimeFeatureToggle\Services\FeatureManager
  */
 class Feature extends Facade
 {

@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Models;
+namespace Imran\RuntimeFeatureToggle\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

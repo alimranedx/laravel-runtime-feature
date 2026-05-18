@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 
-namespace Imran\LaravelRuntimeFeature\Observers;
+namespace Imran\RuntimeFeatureToggle\Observers;
 
-use Imran\LaravelRuntimeFeature\Models\Feature;
-use Imran\LaravelRuntimeFeature\Services\FeatureCacheService;
+use Imran\RuntimeFeatureToggle\Models\Feature;
+use Imran\RuntimeFeatureToggle\Services\FeatureCacheService;
 
 class FeatureObserver
 {
