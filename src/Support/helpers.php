@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Imran\RuntimeFeatureToggle\Facades\Feature;
 

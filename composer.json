@@ -1,4 +1,4 @@
-﻿{
+{
     "name": "al_imran/runtime-feature-toggle",
     "description": "A runtime feature engine for Laravel applications.",
     "type": "library",

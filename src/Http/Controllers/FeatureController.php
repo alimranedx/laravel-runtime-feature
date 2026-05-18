@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Imran\RuntimeFeatureToggle\Http\Controllers;
 
