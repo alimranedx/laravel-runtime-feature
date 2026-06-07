@@ -5,12 +5,14 @@ namespace Imran\RuntimeFeatureToggle\Providers;
 use Imran\RuntimeFeatureToggle\Contracts\FeatureContextResolver;
 use Imran\RuntimeFeatureToggle\Contracts\FeatureRepositoryInterface;
 use Imran\RuntimeFeatureToggle\Extensions\ConditionRegistry;
+use Imran\RuntimeFeatureToggle\Facades\Feature as FeatureFacade;
 use Imran\RuntimeFeatureToggle\Repositories\FeatureRepository;
 use Imran\RuntimeFeatureToggle\Services\ConditionEvaluator;
 use Imran\RuntimeFeatureToggle\Services\FeatureManager;
 use Imran\RuntimeFeatureToggle\Services\FeatureCacheService;
 use Imran\RuntimeFeatureToggle\Models\Feature;
 use Imran\RuntimeFeatureToggle\Observers\FeatureObserver;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class FeatureServiceProvider extends ServiceProvider
@@ -62,6 +64,10 @@ class FeatureServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Feature::observe(FeatureObserver::class);
+
+        // Register 'RuntimeFeature' as a collision-free alias for the Feature facade.
+        // Use: RuntimeFeature::enabled(), RuntimeFeature::value(), etc.
+        AliasLoader::getInstance()->alias('RuntimeFeature', FeatureFacade::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

@@ -19,14 +19,30 @@ class FeatureCacheService
 
     /**
      * Get all features from cache or database.
+     * Stores plain arrays to avoid __PHP_Incomplete_Class on deserialization.
      *
      * @return Collection<int, Feature>
      */
     public function all(): Collection
     {
-        return Cache::store($this->store)->rememberForever($this->cacheKey, function () {
-            return Feature::with('rules')->get();
+        $raw = Cache::store($this->store)->rememberForever($this->cacheKey, function () {
+            return Feature::with('rules')->get()->map(fn(Feature $f) => array_merge(
+                $f->getAttributes(),
+                ['rules' => $f->rules->map(fn($r) => $r->getAttributes())->all()]
+            ))->all();
         });
+
+        // Guard: stale serialized Eloquent objects come back as non-array — bust & re-fetch.
+        if (!is_array($raw)) {
+            $this->invalidate();
+            $raw = Feature::with('rules')->get()->map(fn(Feature $f) => array_merge(
+                $f->getAttributes(),
+                ['rules' => $f->rules->map(fn($r) => $r->getAttributes())->all()]
+            ))->all();
+            Cache::store($this->store)->forever($this->cacheKey, $raw);
+        }
+
+        return $this->hydrate($raw);
     }
 
     /**
@@ -69,17 +85,27 @@ class FeatureCacheService
      */
     public function updateItem(Feature $feature): void
     {
-        $features = $this->all();
-        
-        $index = $features->search(fn($item) => $item->id === $feature->id);
-        
-        if ($index !== false) {
-            $features->put($index, $feature);
-        } else {
-            $features->push($feature);
+        $raw = Cache::store($this->store)->get($this->cacheKey, []);
+
+        // Guard: stale/corrupt cache value — fall back to empty array.
+        if (!is_array($raw)) {
+            $raw = [];
         }
 
-        Cache::store($this->store)->forever($this->cacheKey, $features);
+        $index = collect($raw)->search(fn($item) => is_array($item) && $item['id'] === $feature->id);
+
+        $snapshot = array_merge(
+            $feature->getAttributes(),
+            ['rules' => $feature->rules->map(fn($r) => $r->getAttributes())->all()]
+        );
+
+        if ($index !== false) {
+            $raw[$index] = $snapshot;
+        } else {
+            $raw[] = $snapshot;
+        }
+
+        Cache::store($this->store)->forever($this->cacheKey, array_values($raw));
     }
 
     /**
@@ -90,7 +116,46 @@ class FeatureCacheService
      */
     public function removeItem(int $featureId): void
     {
-        $features = $this->all()->reject(fn($item) => $item->id === $featureId);
-        Cache::store($this->store)->forever($this->cacheKey, $features);
+        $cached = Cache::store($this->store)->get($this->cacheKey, []);
+
+        // Guard: stale/corrupt cache value — fall back to empty array.
+        if (!is_array($cached)) {
+            $cached = [];
+        }
+
+        $raw = collect($cached)
+            ->reject(fn($item) => is_array($item) && $item['id'] === $featureId)
+            ->values()
+            ->all();
+
+        Cache::store($this->store)->forever($this->cacheKey, $raw);
+    }
+
+    /**
+     * Hydrate a plain array back into a Collection of Feature models.
+     *
+     * @param array $rows
+     * @return Collection<int, Feature>
+     */
+    protected function hydrate(array $rows): Collection
+    {
+        return collect($rows)->map(function (array $row) {
+            $rules = $row['rules'] ?? [];
+            unset($row['rules']);
+
+            $feature = (new Feature())->newFromBuilder($row);
+
+            $feature->setRelation(
+                'rules',
+                $feature->rules()->getRelated()->newCollection(
+                    array_map(
+                        fn(array $rule) => $feature->rules()->getRelated()->newFromBuilder($rule),
+                        $rules
+                    )
+                )
+            );
+
+            return $feature;
+        });
     }
 }
